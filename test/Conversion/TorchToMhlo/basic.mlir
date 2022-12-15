@@ -296,3 +296,38 @@ func.func @torch.aten.cat(%arg0: !torch.vtensor<[?,?],f32>, %arg1: !torch.vtenso
   %1 = torch.aten.cat %0, %int0 : !torch.list<vtensor>, !torch.int -> !torch.vtensor<[?,?],f32>
   return %1 : !torch.vtensor<[?,?],f32>
 }
+
+// -----
+
+// CHECK-LABEL:   func.func @torch.aten.gelu_backward(
+// CHECK-SAME:                       %[[VAL_0:.*]]: !torch.vtensor<[5,3],f32>,
+// CHECK-SAME:                       %[[VAL_1:.*]]: !torch.vtensor<[5,3],f32>) -> !torch.vtensor<[5,3],f32> {
+// CHECK:           %[[VAL_2:.*]] = torch_c.to_builtin_tensor %[[VAL_0]] : !torch.vtensor<[5,3],f32> -> tensor<5x3xf32>
+// CHECK:           %[[VAL_3:.*]] = torch_c.to_builtin_tensor %[[VAL_1]] : !torch.vtensor<[5,3],f32> -> tensor<5x3xf32>
+// CHECK:           %[[VAL_4:.*]] = torch.constant.str "none"
+// CHECK:           %[[VAL_5:.*]] = "chlo.constant_like"(%[[VAL_3]]) {value = 0.707106769 : f32} : (tensor<5x3xf32>) -> tensor<5x3xf32>
+// CHECK:           %[[VAL_6:.*]] = "chlo.constant_like"(%[[VAL_3]]) {value = 1.12837923 : f32} : (tensor<5x3xf32>) -> tensor<5x3xf32>
+// CHECK:           %[[VAL_7:.*]] = "chlo.constant_like"(%[[VAL_3]]) {value = 5.000000e-01 : f32} : (tensor<5x3xf32>) -> tensor<5x3xf32>
+// CHECK:           %[[VAL_8:.*]] = "chlo.constant_like"(%[[VAL_3]]) {value = 1.000000e+00 : f32} : (tensor<5x3xf32>) -> tensor<5x3xf32>
+// CHECK:           %[[VAL_9:.*]] = "chlo.constant_like"(%[[VAL_3]]) {value = -5.000000e-01 : f32} : (tensor<5x3xf32>) -> tensor<5x3xf32>
+// CHECK:           %[[VAL_10:.*]] = mhlo.multiply %[[VAL_5]], %[[VAL_6]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_11:.*]] = mhlo.multiply %[[VAL_10]], %[[VAL_7]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_12:.*]] = mhlo.multiply %[[VAL_5]], %[[VAL_3]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_13:.*]] = chlo.erf %[[VAL_12]] : tensor<5x3xf32> -> tensor<5x3xf32>
+// CHECK:           %[[VAL_14:.*]] = mhlo.add %[[VAL_13]], %[[VAL_8]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_15:.*]] = mhlo.multiply %[[VAL_14]], %[[VAL_7]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_16:.*]] = mhlo.multiply %[[VAL_3]], %[[VAL_3]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_17:.*]] = mhlo.multiply %[[VAL_16]], %[[VAL_9]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_18:.*]] = mhlo.exponential %[[VAL_17]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_19:.*]] = mhlo.multiply %[[VAL_11]], %[[VAL_18]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_20:.*]] = mhlo.multiply %[[VAL_19]], %[[VAL_3]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_21:.*]] = mhlo.add %[[VAL_20]], %[[VAL_15]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_22:.*]] = mhlo.multiply %[[VAL_2]], %[[VAL_21]] : tensor<5x3xf32>
+// CHECK:           %[[VAL_23:.*]] = torch_c.from_builtin_tensor %[[VAL_22]] : tensor<5x3xf32> -> !torch.vtensor<[5,3],f32>
+// CHECK:           return %[[VAL_23]] : !torch.vtensor<[5,3],f32>
+// CHECK:         }
+func.func @torch.aten.gelu_backward(%arg0: !torch.vtensor<[5,3],f32>, %arg1: !torch.vtensor<[5,3],f32>) -> !torch.vtensor<[5,3],f32> {
+    %str = torch.constant.str "none"
+    %0 = torch.aten.gelu_backward %arg0, %arg1, %str : !torch.vtensor<[5,3],f32>, !torch.vtensor<[5,3],f32>, !torch.str -> !torch.vtensor<[5,3],f32>
+    return %0 : !torch.vtensor<[5,3],f32>
+  }

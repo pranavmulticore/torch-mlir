@@ -172,6 +172,7 @@ MHLO_PASS_SET = {
     "ElementwiseEqIntScalarModule_basic",
     "ElementwiseErfModule_basic",
     "ElementwiseGeluModule_basic",
+    "GeluBackwardModule_basic",
     "ElementwiseGtFloatScalarModule_basic",
     "ElementwiseGtIntScalarModule_basic",
     "ElementwiseGtMixed2ScalarModule_basic",
